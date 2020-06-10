@@ -2,10 +2,11 @@ import React from 'react';
 import './App.css';
 import L from 'leaflet';
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
-import leafOrange from './assets/leaf-orange.png';
+// import leafOrange from './assets/leaf-orange.png';
 import leafShadow from './assets/leaf-shadow.png';
 import { geolocated } from "react-geolocated";
 import logo from './assets/logo.png';
+
 class App extends React.Component {
   constructor(props){
   super(props)
@@ -22,6 +23,12 @@ class App extends React.Component {
   this.handleChange = this.handleChange.bind(this);
   this.handleSubmit= this.handleSubmit.bind(this)
   }
+  componentDidUpdate(){ console.log('COORD', this.state.orangeIcon)
+    if(this.state.orangeIcon.lat === '' || null) {
+    this.setState({orangeIcon: {lat:this.props.coords.latitude, lng:this.props.coords.longitude}})
+    }
+  }
+  
   componentWillMount() {
     fetch('http://api.ipify.org?format=json?callback=?', {
       method: 'GET',
@@ -46,11 +53,7 @@ class App extends React.Component {
     });
   }
 
-  componentDidUpdate(){ console.log('COORD', this.state.orangeIcon)
-    if(this.state.orangeIcon.lat === '' || null) {
-    this.setState({orangeIcon: {lat:this.props.coords.latitude, lng:this.props.coords.longitude}})
-    }
-  }
+  
 
   handleChange(event) {
     this.setState({value: event.target.value});
@@ -62,7 +65,7 @@ class App extends React.Component {
   }
 
   orangeIcon = L.icon({
-    iconUrl: leafOrange,
+    iconUrl: logo,
     shadowUrl: leafShadow,
     iconSize:     [38, 95], // size of the icon
     shadowSize:   [50, 64], // size of the shadow
@@ -84,7 +87,7 @@ class App extends React.Component {
         />
         <Marker position={positionOrangeIcon} icon={this.orangeIcon}>
           <Popup>
-            I am an orange leaf
+            I am here
           </Popup>
         </Marker>
       </Map>
@@ -198,6 +201,9 @@ class App extends React.Component {
 export default geolocated({
   positionOptions: {
       enableHighAccuracy: false,
+      timeout: Infinity,
+      maximumAge: Infinity
   },
-  userDecisionTimeout: 7000,
+  userDecisionTimeout: Infinity,
+  watchPosition: true
 })(App);
