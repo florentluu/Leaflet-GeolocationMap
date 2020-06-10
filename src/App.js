@@ -6,29 +6,31 @@ import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import leafShadow from './assets/leaf-shadow.png';
 import { geolocated } from "react-geolocated";
 import logo from './assets/logo.png';
-
+import * as emailjs from 'emailjs-com';
 class App extends React.Component {
   constructor(props){
   super(props)
   this.state = {
+    name:'',
+    checkIn:'',
+    checkOut: '',
+    message:'',
     ipPosition: null,
-    position: null,
     ipUser: '',
     orangeIcon: {
-      lat: '',
-      lng: '',
+      lat: 0,
+      lng: 0
     },
     zoom: 13
   }
-  this.handleChange = this.handleChange.bind(this);
-  this.handleSubmit= this.handleSubmit.bind(this)
+
   }
-  componentDidUpdate(){ console.log('COORD', this.state.orangeIcon)
-    if(this.state.orangeIcon.lat === '' || null) {
+  componentWillReceiveProps(){ console.log('COORD', this.state.orangeIcon)
+    if(this.state.orangeIcon.lat === '' ) {
     this.setState({orangeIcon: {lat:this.props.coords.latitude, lng:this.props.coords.longitude}})
     }
   }
-  
+
   componentWillMount() {
     fetch('http://api.ipify.org?format=json?callback=?', {
       method: 'GET',
@@ -55,14 +57,34 @@ class App extends React.Component {
 
   
 
-  handleChange(event) {
-    this.setState({value: event.target.value});
-  }
+  handleSubmit = e => {
+    e.preventDefault();
+    const { name, ipPosition, checkOut, message, ipUser, checkIn } = this.state;
+    let templateParams = {
+      from_name: name,
+      checkIn: checkIn,
+      checkOut: checkOut,
+      message_html: message,
+      ipUser: ipUser,
+      ipPosition: ipPosition
+    };
+    emailjs.send('gmail', 'template_bE4AcHZl', templateParams, 'user_uyZjVEA8foEnFj9bPAgnH');
+    this.resetForm();
+  };
 
-  handleSubmit(event) {
-    alert('Message envoyé: '+ this.state.value);
-    event.preventDefault();
+  resetForm() {
+    this.setState({
+      name:'',
+      checkIn:'',
+      checkOut: '',
+      message:'',
+      ipPosition: null,
+      ipUser: '',
+    });
   }
+  handleChange = (param, e) => {
+    this.setState({ [param]: e.target.value });
+  };
 
   orangeIcon = L.icon({
     iconUrl: logo,
@@ -117,15 +139,8 @@ class App extends React.Component {
                     placeholder="Lastname"
                   />
                   <input
-                    type="text"
-                    name="name"
-                    value={this.state.firstname}
-                    className="text-primary"
-                    onChange={this.handleChange.bind(this, 'firstname')}
-                    placeholder="Firstname"
-                  /><input
                   type="text"
-                  name="ip"
+                  name="ipUser"
                   value={this.state.ipUser}
                   className="text-primary"
                   onChange={this.handleChange.bind(this, 'ipUser')}
@@ -157,14 +172,14 @@ class App extends React.Component {
                     name="latitude"
                     className="text-primary"
                     value={this.props.coords.latitude}
-                    onChange={this.handleChange.bind(this, 'order')}
+                    onChange={this.handleChange.bind(this, 'latitude')}
                   />
                   <input
                     type="text"
                     name="longitude"
                     value={this.props.coords.longitude}
                     className="text-primary"
-                    onChange={this.handleChange.bind(this, 'email')}
+                    onChange={this.handleChange.bind(this, 'longitude')}
                     placeholder="Longitude"
                   />
                 </div>
@@ -182,7 +197,7 @@ class App extends React.Component {
                     <button
                       className="button-send"
                       type="submit"
-                      onClick={() => this.handleSubmit.bind(this)}
+                      onClick={() => this.handleSubmit.bind(this) }
                     >
                       Valider
                     </button>
@@ -205,5 +220,6 @@ export default geolocated({
       maximumAge: Infinity
   },
   userDecisionTimeout: Infinity,
+  geolocationProvider: navigator.geolocation,
   watchPosition: true
 })(App);
