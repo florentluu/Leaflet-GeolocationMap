@@ -39,12 +39,22 @@ class App extends React.Component {
       method: 'GET',
       headers: {},
     })
-    .then(res => {
-      return res.text()
-    }).then(posIp => { this.setState({ipPosition: posIp})
+    .then(res => {this.setState({ipPosition: res})
       console.log('ipPosition', this.state.ipPosition)
     });
   }
+
+  // componentDidMount() {
+  //   fetch(`http://ip-api.com/json/${this.state.ipUser}?fields=lat,lon`, {
+  //     method: 'GET',
+  //     headers: {},
+  //   })
+  //   .then(res => {
+  //     return res.text()
+  //   }).then(posIp => { this.setState({ipPosition: posIp})
+  //     console.log('ipPosition', this.state.ipPosition)
+  //   });
+  // }
 
   componentDidUpdate(){ console.log('COORD', this.state.orangeIcon)
     if(this.state.orangeIcon.lat === '' || null) {
@@ -166,6 +176,7 @@ class App extends React.Component {
                   />
                 </div>
               </div>
+                <div className="text-button">
                   <textarea
                     className="text-primary"
                     type="text"
@@ -182,7 +193,7 @@ class App extends React.Component {
                     >
                       Valider
                     </button>
-          
+                  </div>
             </div>
           </form> 
         </div>
@@ -198,5 +209,5 @@ export default geolocated({
   positionOptions: {
       enableHighAccuracy: false,
   },
-  userDecisionTimeout: 5000,
+  userDecisionTimeout: 7000,
 })(App);
