@@ -39,22 +39,12 @@ class App extends React.Component {
       method: 'GET',
       headers: {},
     })
-    .then(res => {this.setState({ipPosition: res})
+    .then(res => {
+      return res.text()
+    }).then(posIp => { this.setState({ipPosition: posIp})
       console.log('ipPosition', this.state.ipPosition)
     });
   }
-
-  // componentDidMount() {
-  //   fetch(`http://ip-api.com/json/${this.state.ipUser}?fields=lat,lon`, {
-  //     method: 'GET',
-  //     headers: {},
-  //   })
-  //   .then(res => {
-  //     return res.text()
-  //   }).then(posIp => { this.setState({ipPosition: posIp})
-  //     console.log('ipPosition', this.state.ipPosition)
-  //   });
-  // }
 
   componentDidUpdate(){ console.log('COORD', this.state.orangeIcon)
     if(this.state.orangeIcon.lat === '' || null) {
