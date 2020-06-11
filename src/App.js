@@ -17,20 +17,17 @@ class App extends React.Component {
     message:'',
     ipPosition: null,
     ipUser: '',
-    orangeIcon: {
-      lat: 0,
-      lng: 0
-    },
+    orangeIcon:  this.props.coords,
     zoom: 13
   }
 
   }
-  componentWillReceiveProps(){ console.log('COORD', this.state.orangeIcon)
-    if(this.state.orangeIcon.lat === '' ) {
-    this.setState({orangeIcon: {lat:this.props.coords.latitude, lng:this.props.coords.longitude}})
+  componentDidUpdate(){ console.log('COORD', this.props.coords)
+    if(this.state.orangeIcon === '' || null) {
+    this.setState({orangeIcon: this.props.coords})
     }
   }
-
+  
   componentWillMount() {
     fetch('http://api.ipify.org?format=json?callback=?', {
       method: 'GET',
@@ -98,21 +95,8 @@ class App extends React.Component {
 
   
   render(){
-    const positionOrangeIcon = [this.state.orangeIcon.lat, this.state.orangeIcon.lng];
-    
     return (
       <div>
-        <Map className="map" center={positionOrangeIcon} zoom={this.state.zoom}>
-        <TileLayer
-          attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <Marker position={positionOrangeIcon} icon={this.orangeIcon}>
-          <Popup>
-            I am here
-          </Popup>
-        </Marker>
-      </Map>
         {
         !this.props.isGeolocationAvailable ? (
             <div>Your browser does not support Geolocation</div>
@@ -121,9 +105,20 @@ class App extends React.Component {
         ) : this.props.coords ? ( 
 
         <div>  
+          <Map className="map" center={{lat: this.props.coords.latitude, lng: this.props.coords.longitude}} zoom={this.state.zoom}>
+        <TileLayer
+          attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <Marker position={{lat: this.props.coords.latitude, lng: this.props.coords.longitude}} icon={this.orangeIcon}>
+          <Popup>
+            I am here
+          </Popup>
+        </Marker>
+      </Map>
           <form className="container-form" onSubmit={this.handleSubmit.bind(this)}>
             <div className='logodiv'>
-              VILLA BALI MANAGEMENT
+              VILLA BALI MANAGEMENT {this.props.coords.longitude}
               <br/>
               <img src={logo} alt="Logo" className='logo'/>
             </div>
