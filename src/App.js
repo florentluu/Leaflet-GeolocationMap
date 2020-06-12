@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import L from 'leaflet';
-import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
+import { Map, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 // import leafOrange from './assets/leaf-orange.png';
 import leafShadow from './assets/leaf-shadow.png';
 import { geolocated } from "react-geolocated";
@@ -29,7 +29,7 @@ class App extends React.Component {
   // }
   
   componentDidUpdate() {
-    fetch('http://api.ipify.org?format=json?callback=?', {
+    fetch('https://api.ipify.org?format=json?callback=?', {
       method: 'GET',
       headers: {},
     })
@@ -41,7 +41,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`http://ip-api.com/json/${this.state.ipUser}?fields=lat,lon`, {
+    fetch(`https://ip-api.com/json/${this.state.ipUser}?fields=lat,lon`, {
       method: 'GET',
       headers: {},
     })
@@ -110,6 +110,7 @@ class App extends React.Component {
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        <Circle center={{lat: this.props.coords.latitude, lng: this.props.coords.longitude}} fillColor="blue" radius={400} />
         <Marker position={{lat: this.props.coords.latitude, lng: this.props.coords.longitude}} icon={this.orangeIcon} >
           <Popup>
             I am here
