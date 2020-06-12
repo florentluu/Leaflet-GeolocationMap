@@ -22,13 +22,13 @@ class App extends React.Component {
   }
 
   }
-  componentDidUpdate(){ console.log('COORD', this.props.coords)
-    if(this.state.orangeIcon === '' || null) {
-    this.setState({orangeIcon: this.props.coords})
-    }
-  }
+  // componentDidUpdate(){ console.log('COORD', this.props.coords)
+  //   if(this.state.orangeIcon === '' || null) {
+  //   this.setState({orangeIcon: this.props.coords})
+  //   }
+  // }
   
-  componentWillMount() {
+  componentDidUpdate() {
     fetch('http://api.ipify.org?format=json?callback=?', {
       method: 'GET',
       headers: {},
@@ -103,14 +103,14 @@ class App extends React.Component {
         ) : !this.props.isGeolocationEnabled ? (
             <div>Geolocation is not enabled</div>
         ) : this.props.coords ? ( 
-
+          
         <div>  
           <Map className="map" center={{lat: this.props.coords.latitude, lng: this.props.coords.longitude}} zoom={this.state.zoom}>
         <TileLayer
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Marker position={{lat: this.props.coords.latitude, lng: this.props.coords.longitude}} icon={this.orangeIcon}>
+        <Marker position={{lat: this.props.coords.latitude, lng: this.props.coords.longitude}} icon={this.orangeIcon} >
           <Popup>
             I am here
           </Popup>
@@ -118,7 +118,7 @@ class App extends React.Component {
       </Map>
           <form className="container-form" onSubmit={this.handleSubmit.bind(this)}>
             <div className='logodiv'>
-              VILLA BALI MANAGEMENT {this.props.coords.longitude}
+              VILLA BALI MANAGEMENT
               <br/>
               <img src={logo} alt="Logo" className='logo'/>
             </div>
