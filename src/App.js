@@ -15,7 +15,7 @@ class App extends React.Component {
     checkIn:'',
     checkOut: '',
     message:'',
-    ipPosition: null,
+    ipPosition: '',
     ipUser: '',
     orangeIcon:  this.props.coords,
     zoom: 13
@@ -41,7 +41,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`https://ip-api.com/json/${this.state.ipUser}?fields=lat,lon`, {
+    fetch(`http://ip-api.com/json/${this.state.ipUser}?fields=lat,lon`, {
       method: 'GET',
       headers: {},
     })
@@ -75,7 +75,7 @@ class App extends React.Component {
       checkIn:'',
       checkOut: '',
       message:'',
-      ipPosition: null,
+      ipPosition: '',
       ipUser: '',
     });
   }
